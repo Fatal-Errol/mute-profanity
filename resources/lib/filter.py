@@ -32,14 +32,14 @@ def parse_file(fileloc, default_category="Expletives"):
 
 def get_blocked_tuples(categories, severities):
     words = []
-    for key, value in severities.iteritems():
+    for key, value in severities.items():
         if not value:
-            print "Not blocking words of category: " + key
+            print("Not blocking words of category: " + key)
             continue
         if key in categories:
             words.extend(get_tuples_ge_severity(categories[key], value))
         else:
-            print "WARNING: the category " + key + " is not in the filter file, ignoring it"
+            print("WARNING: the category " + key + " is not in the filter file, ignoring it")
     return words
 
 
@@ -50,7 +50,7 @@ def is_blocked(severity, category_name, severities):
 
 def get_all_words(categories):
     list = []
-    for tuples in categories.values():
+    for tuples in list(categories.values()):
         list.extend(get_word_list(tuples))
     return list
 
@@ -69,5 +69,5 @@ if __name__ == "__main__":
     filename = sys.argv[1]
     categories = parse_file(filename)
     blocked_words = get_blocked_tuples(categories, severities)
-    print blocked_words
+    print(blocked_words)
 

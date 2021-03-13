@@ -4,7 +4,7 @@ import subprocess
 
 def log(*args):
     for arg in args:
-        print arg
+        print(arg)
         
 class MP4Extractor:
     def __init__(self, toolsDir=''):
@@ -43,7 +43,7 @@ class MP4Extractor:
                 tracks[trackNumber]['type'] = trackType
     
         subTrackID = None
-        for track in tracks.values():
+        for track in list(tracks.values()):
             log("Track info: %s" % track)
             if 'type' not in track or track['type'] != 'tx3g':
                 continue
@@ -53,7 +53,7 @@ class MP4Extractor:
             break
             
         if subTrackID != None:
-            print 'Found subtitle track: %d' % subTrackID
+            print('Found subtitle track: %d' % subTrackID)
         return subTrackID
     
     def startExtract(self, filePath, trackID):

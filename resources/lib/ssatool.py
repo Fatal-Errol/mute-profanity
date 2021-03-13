@@ -116,7 +116,7 @@ def main(infile, outfile=None):
     sink = codecs.open(outfile, 'w', 'utf8')
     
     # HACK: Handle UTF-8 files with Byte-Order Markers.
-    if stream.read(1) == unicode(codecs.BOM_UTF8, "utf8"):
+    if stream.read(1) == str(codecs.BOM_UTF8, "utf8"):
         stream.seek(3)
     else:
         stream.seek(0)
@@ -151,7 +151,7 @@ def main(infile, outfile=None):
     
     # Write the file.  SRT requires each event to be numbered.
     index = 1
-    sink.write(unicode(codecs.BOM_UTF8, "utf8"))
+    sink.write(str(codecs.BOM_UTF8, "utf8"))
     for i in merged:
         sink.write(i.out_srt(index) + '\r\n')
         index += 1

@@ -19,11 +19,11 @@ class UIManager(object):
         self.plugin = plugin
         
     def showSimpleListing(self, listing, isDir=True):
-        print "plugin: %s" % self.plugin        
+        print("plugin: %s" % self.plugin)        
         # send each item to xbmc
         for item in listing:
-            print "adding item: %s" % item[0]
-            print "url will go to %s" % item[1] 
+            print("adding item: %s" % item[0])
+            print("url will go to %s" % item[1]) 
             listItem = xbmcgui.ListItem(item[0])
             xbmcplugin.addDirectoryItem(self.plugin,item[1],listItem, isDir)
             

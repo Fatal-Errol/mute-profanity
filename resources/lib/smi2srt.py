@@ -51,26 +51,26 @@ usage %s smifile.smi [...]
 """ % os.path.basename(sys.argv[0])
 	if msg:
 		print_msg += '%s\n' % msg
-	print print_msg
+	print(print_msg)
 	sys.exit(exit_code)
 
 ###################################################################################################
 class smiItem(object):
 	def __init__(self):
-		self.start_ms = 0L
+		self.start_ms = 0
 		self.start_ts = '00:00:00,000'
-		self.end_ms = 0L
+		self.end_ms = 0
 		self.end_ts = '00:00:00,000'
 		self.contents = None
 		self.linecount = 0
 	@staticmethod
 	def ms2ts(ms):
-		hours = ms / 3600000L
-		ms -= hours * 3600000L
-		minutes = ms / 60000L
-		ms -= minutes * 60000L
-		seconds = ms / 1000L
-		ms -= seconds * 1000L
+		hours = ms / 3600000
+		ms -= hours * 3600000
+		minutes = ms / 60000
+		ms -= minutes * 60000
+		seconds = ms / 1000
+		ms -= seconds * 1000
 		s = '%02d:%02d:%02d,%03d' % (hours, minutes, seconds, ms)
 		return s
 	def convertSrt(self):
@@ -122,8 +122,8 @@ def convertSMI(smi_file):
 	# skip to first starting tag (skip first 0xff 0xfe ...)
 	try:
 		fndx = smi_sgml.find('<SYNC')
-	except Exception, e:
-		print chdt
+	except Exception as e:
+		print(chdt)
 		raise e
 	if fndx < 0:
 		return None
@@ -145,14 +145,14 @@ def convertSMI(smi_file):
 			sync_cont += line[0:sndx]
 			last_si = si
 			if last_si != None:
-				last_si.end_ms = long(m.group(1))
+				last_si.end_ms = int(m.group(1))
 				last_si.contents = sync_cont
 				srt_list.append(last_si)
 				last_si.linecount = linecnt
 				#print '[%06d] %s' % (linecnt, last_si)
 			sync_cont = m.group(2)
 			si = smiItem()
-			si.start_ms = long(m.group(1))
+			si.start_ms = int(m.group(1))
 		else:
 			sync_cont += line
 			
@@ -176,9 +176,9 @@ def doConvert():
 		usage()
 	for smi_file in sys.argv[1:]:
 		if convertSMI(smi_file):
-			print "Converting <%s> OK!" % smi_file
+			print("Converting <%s> OK!" % smi_file)
 		else:
-			print "Converting <%s> Failture!" % smi_file
+			print("Converting <%s> Failture!" % smi_file)
 			
 	
 ###################################################################################################

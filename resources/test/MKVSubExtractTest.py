@@ -32,7 +32,7 @@ class TestProcess(unittest.TestCase):
         while x.isRunning():
             #self.assertTrue(x.getSubFile() == None)
             self.assertTrue(x.progress >= prevProgress)
-            print "Progress: %d" % x.progress
+            print("Progress: %d" % x.progress)
             prevProgress = x.progress
             time.sleep(.1)
             

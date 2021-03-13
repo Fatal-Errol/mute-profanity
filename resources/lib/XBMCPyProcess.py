@@ -30,11 +30,11 @@ class Process(object):
         This should execute in another process/thread, as it blocks till execution is complete
         """
         cmd = ' '.join("'" + arg + "'" for arg in args) + " > " + self._unix_fifo.name
-        print 'Executing this command: ' + cmd
+        print('Executing this command: ' + cmd)
         #self._unix_exit_code = xbmc.executebuiltin('System.Exec(%s)' % cmd)
         self._unix_exit_code = os.system(cmd)
 
-        print "Done..."
+        print("Done...")
         self._unix_complete = True
 
 

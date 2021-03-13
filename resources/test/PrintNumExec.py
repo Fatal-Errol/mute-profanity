@@ -9,7 +9,7 @@ def main():
     while i < count:
         time.sleep(0.1)
         i += 1
-        print i
+        print(i)
         sys.stdout.flush()
 
 if __name__ == "__main__":

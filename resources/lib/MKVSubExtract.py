@@ -1,14 +1,14 @@
 import os
 import re
 
-from XBMCPyProcess import Process
-import ssatool
+from .XBMCPyProcess import Process
+from . import ssatool
 
 def log(*args):
     arr = []
     for arg in args:
         arr.append(str(arg))
-    print ' '.join(arr)
+    print(' '.join(arr))
 
 class MKVExtractor:
     def __init__(self, toolsDir=''):
@@ -62,7 +62,7 @@ class MKVExtractor:
                 continue
         
         subTrackID = None
-        for track in tracks.values():
+        for track in list(tracks.values()):
             if track['type'] != 'subtitles':
                 continue
             if 'language' in track and track['language'] != 'eng':

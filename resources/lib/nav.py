@@ -4,7 +4,7 @@ Created on July 13, 2013
 @author: Scott Brown
 """
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import os
 import sys
 import xbmc
@@ -25,10 +25,10 @@ BASE_RESOURCE_PATH = xbmc.translatePath(os.path.join(__addon_path__, 'resources'
 MEDIA_PATH = os.path.join(BASE_RESOURCE_PATH, 'media')
 BACKGROUND_FILE = os.path.join(MEDIA_PATH, 'BackgroundPanel.png')
 
-from EDLManager import EDLManager
-import JSONUtils as data
-import SubFinder as subf
-import filter
+from resources.lib.EDLManager import EDLManager
+from resources.lib import JSONUtils as data
+from resources.lib import SubFinder as subf
+from resources.lib import filter
 
 # magic; id of this plugin's instance - cast to integer
 _thisPlugin = int(sys.argv[1])
@@ -40,8 +40,8 @@ subf.log = xbmc.log
 def showSimpleListing(listing, isDir=True):
     # send each item to xbmc
     for item in listing:
-        print "adding item: %s" % item[0]
-        print "url will go to %s" % item[1]
+        print("adding item: %s" % item[0])
+        print("url will go to %s" % item[1])
         listItem = xbmcgui.ListItem(item[0])
         xbmcplugin.addDirectoryItem(_thisPlugin,item[1],listItem, isDir)
 
@@ -51,7 +51,8 @@ def showSimpleListing(listing, isDir=True):
 
 def showThumbnailListing(listing, isDir=False):
     for item in listing:
-        listItem = xbmcgui.ListItem(label=item[0], thumbnailImage=item[1])
+        listItem = xbmcgui.ListItem(label=item[0])
+        listItem.setArt({ 'thumb': item[1] })
         xbmcplugin.addDirectoryItem(_thisPlugin,item[2],listItem, isDir)
 
     # tell xbmc we have finished creating
@@ -91,14 +92,14 @@ def getWordsListing(show_all=False):
     severities = get_severities()
 
     catId = 0
-    for name, tuples in categories.iteritems():
+    for name, tuples in categories.items():
         wordId = 0
         for word, severity in tuples:
             if show_all or filter.is_blocked(severity, name, severities):
                 params = {'mode': 'word-details',
                           'wordId': wordId,
                           'categoryId': catId}
-                listing.append([word, sys.argv[0] + '?' + urllib.urlencode(params)])
+                listing.append([word, sys.argv[0] + '?' + urllib.parse.urlencode(params)])
             wordId += 1
         catId += 1
     return listing
@@ -142,20 +143,19 @@ def createEDL(srtLoc, fileLoc):
         edl.updateEDL()
         return True
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        print("Unexpected error:", sys.exc_info()[0])
         return False
-
 
 def handle(params):
     try:
-        mode = urllib.unquote_plus(params["mode"])
+        mode = urllib.parse.unquote_plus(params["mode"])
     except:
         mode = None
 
     dialog = xbmcgui.Dialog()
 
     if mode == 'mute-movie':
-        movieid = urllib.unquote_plus(params["id"])
+        movieid = urllib.parse.unquote_plus(params["id"])
         xbmc.log("movieid: %s" % str(movieid))
         details = data.getMovieDetails(movieid)
         xbmc.log('details: %s' % details)
@@ -174,7 +174,7 @@ def handle(params):
             else:
                 dialog.ok(details['label'], Addon.getLocalizedString(30307))
     elif mode == 'mute-episode':
-        episodeId = urllib.unquote_plus(params["id"])
+        episodeId = urllib.parse.unquote_plus(params["id"])
         xbmc.log("episodeId: %s" % str(episodeId))
         details = data.getEpisodeDetails(episodeId)
         xbmc.log('details: %s' % details)
@@ -209,7 +209,7 @@ def handle(params):
             listing.append([show['label'], show['thumbnail'], url])
         showThumbnailListing(listing, True)
     elif mode == 'tvshow-details':
-        showId = urllib.unquote_plus(params["id"])
+        showId = urllib.parse.unquote_plus(params["id"])
         episodes = data.GetTVShowEpisodes(showId)
         xbmc.log('episodes: %s' % episodes)
         listing = []
@@ -227,13 +227,13 @@ def handle(params):
             dialog.ok('XBMC', "To edit this list, modify 'filter.txt' in the script's directory" )
             showSimpleListing(getWordsListing(True))
     elif mode == 'word-details':
-        categoryId = int(urllib.unquote_plus(params["categoryId"]))
-        wordId = int(urllib.unquote_plus(params["wordId"]))
+        categoryId = int(urllib.parse.unquote_plus(params["categoryId"]))
+        wordId = int(urllib.parse.unquote_plus(params["wordId"]))
 
         categories = get_categories()
         prefs = get_severities()
 
-        category = categories.keys()[categoryId]
+        category = list(categories.keys())[categoryId]
         word, severity = categories[category][wordId]
         isFiltered = filter.is_blocked(severity, category, prefs)
         blockNum = None
