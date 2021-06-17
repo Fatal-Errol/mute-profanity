@@ -51,7 +51,8 @@ def FindSubtitles(videoname, lang):
                     fullFile = os.path.join(os.path.dirname(videoname), item['SubFileName'])
                     zipname = Download(item['ZipDownloadLink'], fullFile)
                     print("Extracting subtitle ", filename, file=sys.stderr)
-                    Unzip(zipname, filename, item['SubFileName'])
+
+                    Unzip(zipname, filename, item['SubFileName'].replace('&', '.'))
                     os.remove(zipname)
                     return filename
     print("No Subtitles found", file=sys.stderr)

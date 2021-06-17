@@ -18,6 +18,7 @@ wanker: 4
 crap: 2
 shiz: 2
 bloody: 4
+*bleep*: 10
 
 Category: Religious
 ###################
